@@ -1,9 +1,22 @@
 services:
+  # 보미 AI 에이전트 (LiveKit Agent)
   bomi:
     build: .
     ports:
       - "8888:8888"
     volumes:
       - .:/app
+    env_file:
+      - .env
+
+  # Next.js 프론트엔드
+  web:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - NEXT_PUBLIC_LIVEKIT_URL=${LIVEKIT_URL}
     env_file:
       - .env

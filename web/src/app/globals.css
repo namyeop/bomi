@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --bomi-orange: #ff8c42;
+  --bomi-orange-light: #ffb380;
+  --bomi-green: #4caf50;
+  --bomi-bg: #fef9f0;
+  --bomi-text: #3d2c1e;
+}
+
+body {
+  background: var(--bomi-bg);
+  color: var(--bomi-text);
+  font-family: "Pretendard", system-ui, sans-serif;
+}
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}

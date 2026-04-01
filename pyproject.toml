@@ -1,14 +1,25 @@
 [project]
 name = "bomi-agent"
-version = "0.1.0"
-description = "Bomi - AI English conversation partner for kids"
+version = "0.2.0"
+description = "Bomi - AI English conversation partner for kids (multi-agent + voice)"
 requires-python = ">=3.12"
 dependencies = [
+    # LangGraph / LangChain
     "langgraph>=0.4",
     "langchain-core>=0.3",
     "langchain-openai>=0.3",
     "langchain-community>=0.3",
     "tavily-python>=0.5",
+    # LiveKit Agent
+    "livekit-agents>=1.0",
+    "livekit-plugins-silero>=1.0",
+    "livekit-plugins-openai>=1.0",
+    # Dev
     "jupyter>=1.0",
     "ipykernel>=6.0",
+    "pytest>=8.0",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
