@@ -1,4 +1,8 @@
 .env
+.env.local
 .venv/
 __pycache__/
 .ipynb_checkpoints/
+node_modules/
+.next/
+.pytest_cache/
