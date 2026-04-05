@@ -1,17 +1,42 @@
 @import "tailwindcss";
 
 :root {
+  --bomi-bg: #fef9f0;
+  --bomi-surface: #fff7ed;
   --bomi-orange: #ff8c42;
+  --bomi-orange-hover: #e67a35;
   --bomi-orange-light: #ffb380;
   --bomi-green: #4caf50;
-  --bomi-bg: #fef9f0;
+  --bomi-red: #e57373;
   --bomi-text: #3d2c1e;
+  --bomi-text-muted: #8b7355;
+  --bomi-radius-sm: 8px;
+  --bomi-radius-md: 16px;
+  --bomi-radius-full: 9999px;
 }
 
 body {
   background: var(--bomi-bg);
   color: var(--bomi-text);
   font-family: "Pretendard", system-ui, sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: "Quicksand", "Pretendard", system-ui, sans-serif;
+}
+
+/* DESIGN.md: 56px min touch target for children */
+button, [role="button"] {
+  min-height: 56px;
+}
+
+/* DESIGN.md: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @keyframes bounce-soft {
@@ -27,4 +52,9 @@ body {
 @keyframes wave {
   0%, 100% { transform: scaleY(0.3); }
   50% { transform: scaleY(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

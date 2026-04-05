@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 왼쪽 귀 -->
+  <path d="M12 8 L22 28 L6 28 Z" fill="#ff8c42"/>
+  <!-- 오른쪽 귀 -->
+  <path d="M52 8 L58 28 L42 28 Z" fill="#ff8c42"/>
+  <!-- 얼굴 -->
+  <ellipse cx="32" cy="38" rx="22" ry="20" fill="#ff8c42"/>
+  <!-- 볼 -->
+  <ellipse cx="32" cy="42" rx="16" ry="14" fill="#fef9f0"/>
+  <!-- 왼쪽 눈 -->
+  <circle cx="24" cy="34" r="4" fill="#3d2c1e"/>
+  <circle cx="25.5" cy="32.5" r="1.5" fill="white"/>
+  <!-- 오른쪽 눈 -->
+  <circle cx="40" cy="34" r="4" fill="#3d2c1e"/>
+  <circle cx="41.5" cy="32.5" r="1.5" fill="white"/>
+  <!-- 코 -->
+  <ellipse cx="32" cy="40" rx="3" ry="2" fill="#3d2c1e"/>
+  <!-- 입 -->
+  <path d="M29 43 Q32 46 35 43" stroke="#3d2c1e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>
