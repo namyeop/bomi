@@ -5,10 +5,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 
 COPY pyproject.toml .
-RUN uv sync
+RUN uv sync --no-dev
 
-COPY . .
+COPY src/ src/
 
-EXPOSE 8888
-
-CMD ["uv", "run", "jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''"]
+CMD ["uv", "run", "python", "-m", "bomi.agent", "start"]
