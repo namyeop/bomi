@@ -1,4 +1,4 @@
-LLM_MODEL = "gpt-4o-mini"
+LLM_MODEL = "gpt-5.4-mini"
 
 MAX_TURNS = 10
 MAX_CONTEXT_MESSAGES = 20  # 모든 에이전트의 컨텍스트 윈도우 상한
