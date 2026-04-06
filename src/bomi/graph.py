@@ -103,7 +103,7 @@ def build_graph_for_livekit() -> StateGraph:
     최종 AIMessage를 TTS로 보낸다.
     """
     builder = _build_state_graph()
-    return builder.compile(checkpointer=MemorySaver())
+    return builder.compile()
 
 
 # 기본 그래프 인스턴스 (CLI/노트북용)
