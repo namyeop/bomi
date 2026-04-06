@@ -58,3 +58,32 @@ button, [role="button"] {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* LiveKit 컴포넌트 스타일 오버라이드 — DESIGN.md에 맞춤 */
+[data-lk-theme] {
+  --lk-theme-color: var(--bomi-orange) !important;
+  --lk-danger-color: var(--bomi-red) !important;
+}
+
+/* DisconnectButton: LiveKit 기본 스타일 제거, 보미 디자인 적용 */
+.lk-disconnect-button {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* BarVisualizer: 보미 오렌지 색상으로 통일 */
+.lk-bar-visualizer .lk-audio-bar {
+  background: var(--bomi-orange-light) !important;
+}
+
+.lk-bar-visualizer[data-lk-va-state="speaking"] .lk-audio-bar {
+  background: var(--bomi-orange) !important;
+}
+
+.lk-bar-visualizer[data-lk-va-state="listening"] .lk-audio-bar {
+  background: var(--bomi-green) !important;
+}

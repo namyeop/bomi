@@ -21,81 +21,23 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
     wsUrl: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [micDenied, setMicDenied] = useState(false);
 
   useEffect(() => {
-    // 마이크 권한 확인
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        stream.getTracks().forEach((t) => t.stop());
-        // 마이크 OK, 토큰 가져오기
-        fetch("/api/token")
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.error) {
-              setError(data.error);
-              return;
-            }
-            setConnectionDetails({ token: data.token, wsUrl: data.wsUrl });
-          })
-          .catch(() => setError("서버에 연결할 수 없어요"));
+    fetch("/api/token")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+        setConnectionDetails({ token: data.token, wsUrl: data.wsUrl });
       })
-      .catch(() => {
-        setMicDenied(true);
-      });
+      .catch(() => setError("서버에 연결할 수 없어요"));
   }, []);
 
   const handleDisconnected = useCallback(() => {
     onEnd();
   }, [onEnd]);
-
-  // 마이크 권한 거부 상태
-  if (micDenied) {
-    return (
-      <main
-        className="min-h-screen flex flex-col items-center justify-center gap-6 p-8 max-w-[480px] mx-auto"
-        style={{ animation: "fade-in 300ms ease-out" }}
-        role="alert"
-        aria-label="마이크 권한이 필요합니다"
-      >
-        <Image src="/bomi-fox.png" alt="보미가 걱정하고 있어요" width={120} height={120} />
-        <div className="text-center space-y-2">
-          <p className="text-2xl font-display font-bold" style={{ color: "var(--bomi-text)" }}>
-            보미가 네 목소리를 들을 수 없어요
-          </p>
-          <p className="text-lg" style={{ color: "var(--bomi-text-muted)" }}>
-            마이크를 켜야 보미와 이야기할 수 있어요
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setMicDenied(false);
-            navigator.mediaDevices
-              .getUserMedia({ audio: true })
-              .then((stream) => {
-                stream.getTracks().forEach((t) => t.stop());
-                window.location.reload();
-              })
-              .catch(() => setMicDenied(true));
-          }}
-          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
-          style={{ background: "var(--bomi-orange)" }}
-          aria-label="마이크 다시 켜기"
-        >
-          마이크 켜기
-        </button>
-        <button
-          onClick={() => onEnd()}
-          className="px-8 py-3 rounded-full text-lg font-bold cursor-pointer"
-          style={{ color: "var(--bomi-text-muted)", background: "transparent" }}
-          aria-label="돌아가기"
-        >
-          돌아가기
-        </button>
-      </main>
-    );
-  }
 
   // 에러 상태
   if (error) {
@@ -147,6 +89,7 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
       token={connectionDetails.token}
       serverUrl={connectionDetails.wsUrl}
       connect={true}
+      audio={true}
       onDisconnected={handleDisconnected}
       className="min-h-screen"
     >
@@ -266,7 +209,7 @@ function BomiConversation({ onEnd }: { onEnd: (report?: string) => void }) {
       {/* 끝내기 버튼 */}
       {isActive && (
         <DisconnectButton
-          className="px-8 py-4 rounded-full text-lg font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
           style={{ background: "var(--bomi-red)" }}
           aria-label="대화 끝내기"
         >

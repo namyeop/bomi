@@ -9,4 +9,6 @@ RUN uv sync --no-dev
 
 COPY src/ src/
 
+ENV PYTHONPATH=/app/src
+
 CMD ["uv", "run", "python", "-m", "bomi.agent", "start"]
