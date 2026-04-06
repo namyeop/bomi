@@ -44,7 +44,7 @@ def quiz_agent(state: BomiState) -> dict:
 
         return {
             "messages": [AIMessage(content=response.content)],
-            "turn_count": state["turn_count"] + 1,
+            "turn_count": state.get("turn_count", 0) + 1,
             "quiz_active": True,
             "quiz_type": quiz_type,
             "quiz_score": 0,
@@ -87,7 +87,7 @@ def quiz_agent(state: BomiState) -> dict:
 
     return {
         "messages": [AIMessage(content=response.content)],
-        "turn_count": state["turn_count"] + 1,
+        "turn_count": state.get("turn_count", 0) + 1,
         "quiz_active": not end_quiz,
         "quiz_score": score,  # LLM이 정답 판단하므로 정확한 추적은 향후 개선
         "quiz_questions_remaining": new_remaining,

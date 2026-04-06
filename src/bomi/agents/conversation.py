@@ -55,7 +55,7 @@ def conversation_agent(state: BomiState) -> dict:
     # 학습 추적 업데이트
     updates: dict = {
         "messages": [AIMessage(content=response.content)],
-        "turn_count": state["turn_count"] + 1,
+        "turn_count": state.get("turn_count", 0) + 1,
         "search_query": "",
         "search_result": "",
         "active_agent": "conversation",

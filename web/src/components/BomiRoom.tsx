@@ -4,12 +4,16 @@ import {
   LiveKitRoom,
   RoomAudioRenderer,
   useVoiceAssistant,
+  useRoomContext,
   BarVisualizer,
   DisconnectButton,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { RoomEvent } from "livekit-client";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const PARENT_REPORT_ATTRIBUTE = "bomi_parent_report";
 
 interface BomiRoomProps {
   onEnd: (parentReport?: string) => void;
@@ -21,6 +25,7 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
     wsUrl: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const parentReportRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     fetch("/api/token")
@@ -36,8 +41,12 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
   }, []);
 
   const handleDisconnected = useCallback(() => {
-    onEnd();
+    onEnd(parentReportRef.current);
   }, [onEnd]);
+
+  const handleParentReport = useCallback((parentReport?: string) => {
+    parentReportRef.current = parentReport;
+  }, []);
 
   // 에러 상태
   if (error) {
@@ -93,15 +102,29 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
       onDisconnected={handleDisconnected}
       className="min-h-screen"
     >
-      <BomiConversation onEnd={onEnd} />
+      <BomiConversation onParentReport={handleParentReport} />
       <RoomAudioRenderer />
     </LiveKitRoom>
   );
 }
 
-function BomiConversation({ onEnd }: { onEnd: (report?: string) => void }) {
+function BomiConversation({ onParentReport }: { onParentReport: (report?: string) => void }) {
   const { state, audioTrack } = useVoiceAssistant();
+  const room = useRoomContext();
   const [sttFailed, setSttFailed] = useState(false);
+
+  useEffect(() => {
+    const handleParticipantAttributesChanged = (changed: Record<string, string>) => {
+      if (changed[PARENT_REPORT_ATTRIBUTE] !== undefined) {
+        onParentReport(changed[PARENT_REPORT_ATTRIBUTE]);
+      }
+    };
+
+    room.on(RoomEvent.ParticipantAttributesChanged, handleParticipantAttributesChanged);
+    return () => {
+      room.off(RoomEvent.ParticipantAttributesChanged, handleParticipantAttributesChanged);
+    };
+  }, [room, onParentReport]);
 
   // STT 실패 감지: listening 상태가 10초 이상 지속되면 안내
   useEffect(() => {

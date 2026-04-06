@@ -94,15 +94,48 @@ def build_graph(with_checkpointer: bool = True) -> StateGraph:
     )
 
 
-def build_graph_for_livekit() -> StateGraph:
-    """LiveKit 음성용 그래프 (interrupt 없이 연속 실행).
+def _strip_messages(fn):
+    """LLMAdapter stream_mode='messages' 중복 방지 래퍼.
 
-    LiveKit은 STT로 사용자 음성을 텍스트로 변환한 후
-    이 그래프에 HumanMessage로 전달한다.
-    interrupt 없이 supervisor → agent → formatter 를 한 번에 실행하고
-    최종 AIMessage를 TTS로 보낸다.
+    LangGraph는 stream_mode='messages'에서 LLM 호출을 인터셉트하여
+    자동 스트리밍한다. 노드가 messages도 반환하면 같은 응답이
+    두 번 스트리밍되므로, 반환값에서 messages를 제거한다.
     """
-    builder = _build_state_graph()
+
+    def wrapper(state):
+        result = fn(state)
+        result.pop("messages", None)
+        return result
+
+    return wrapper
+
+
+def build_graph_for_livekit() -> StateGraph:
+    """LiveKit 음성용 그래프 (LLMAdapter 연동, 턴 단위 실행).
+
+    LiveKit AgentSession이 LLMAdapter를 통해 이 그래프를 호출한다.
+    session_setup은 LiveKit Agent의 instructions로 대체하고,
+    response_formatter는 프롬프트의 [VOICE OUTPUT] 규칙으로 대체하여
+    supervisor → agent 파이프라인만 실행한다.
+
+    에이전트 노드는 _strip_messages로 감싸서 stream_mode='messages'
+    자동 스트리밍과의 중복을 방지한다.
+    """
+    builder = StateGraph(BomiState)
+
+    builder.add_node("supervisor", supervisor)
+    builder.add_node("conversation_agent", _strip_messages(conversation_agent))
+    builder.add_node("quiz_agent", _strip_messages(quiz_agent))
+    builder.add_node("knowledge_agent", knowledge_agent)
+    builder.add_node("assessment_agent", _strip_messages(assessment_agent))
+
+    builder.add_edge(START, "supervisor")
+    builder.add_conditional_edges("supervisor", route_by_supervisor)
+    builder.add_edge("conversation_agent", END)
+    builder.add_edge("quiz_agent", END)
+    builder.add_conditional_edges("knowledge_agent", route_after_knowledge)
+    builder.add_edge("assessment_agent", END)
+
     return builder.compile()
 
 

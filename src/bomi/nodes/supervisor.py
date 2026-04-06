@@ -5,10 +5,10 @@ from langchain_openai import ChatOpenAI
 
 from bomi.config import LLM_MODEL
 from bomi.prompts import SUPERVISOR_PROMPT
+from bomi.session_control import is_end_session_text
 from bomi.state import BomiState
 
 # 규칙 기반 빠른 분류용 키워드
-END_WORDS = {"bye", "quit", "exit", "끝", "그만", "stop", "goodbye"}
 GREETING_WORDS = {"hi", "hello", "hey", "안녕", "하이"}
 QUIZ_WORDS = {"game", "play", "quiz", "게임", "퀴즈"}
 
@@ -21,7 +21,7 @@ def _rule_based_classify(text: str) -> str | None:
     """명백한 패턴은 LLM 없이 규칙으로 분류. None이면 LLM 필요."""
     words = set(text.lower().split())
 
-    if words & END_WORDS:
+    if is_end_session_text(text):
         return "end_session"
     if words & GREETING_WORDS and len(words) <= 3:
         return "conversation"
@@ -50,7 +50,7 @@ def supervisor(state: BomiState) -> dict:
 
     # 퀴즈 진행 중이면 퀴즈로 유지 (종료 키워드 제외)
     if state.get("quiz_active"):
-        if set(text.split()) & END_WORDS:
+        if is_end_session_text(text):
             return {
                 "supervisor_decision": "end_session",
                 "active_agent": "assessment",
