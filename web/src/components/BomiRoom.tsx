@@ -77,7 +77,7 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
         <div style={{ animation: "bounce-soft 1s ease-in-out infinite" }}>
           <Image src="/bomi-fox.png" alt="보미를 찾는 중" width={120} height={120} />
         </div>
-        <p className="text-xl" style={{ color: "var(--bomi-text-muted)" }}>
+        <p className="text-xl font-display font-medium" style={{ color: "var(--bomi-text-muted)" }}>
           보미를 만나는 중...
         </p>
       </main>
@@ -209,8 +209,12 @@ function BomiConversation({ onEnd }: { onEnd: (report?: string) => void }) {
       {/* 끝내기 버튼 */}
       {isActive && (
         <DisconnectButton
-          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
-          style={{ background: "var(--bomi-red)" }}
+          className="px-10 py-4 rounded-full text-lg font-display font-bold cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          style={{
+            background: "var(--bomi-surface)",
+            color: "var(--bomi-text-muted)",
+            border: "2px solid var(--bomi-text-muted)",
+          }}
           aria-label="대화 끝내기"
         >
           대화 끝내기
