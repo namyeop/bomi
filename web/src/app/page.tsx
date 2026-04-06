@@ -65,7 +65,7 @@ export default function Home() {
             setFarewellData(null);
             setScreen("welcome");
           }}
-          className="px-10 py-4 rounded-full text-xl font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
           style={{ background: "var(--bomi-orange)" }}
           aria-label="처음으로 돌아가기"
         >
