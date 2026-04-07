@@ -1,111 +1,93 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
-import { BomiRoom } from "@/components/BomiRoom";
+import Link from "next/link";
 
-type AppScreen = "welcome" | "conversation" | "farewell";
+export const metadata = {
+  title: "보미 (Bomi) — 화상영어 1/10 가격, 매일 영어 친구",
+  description:
+    "AI 영어 친구 보미와 매일 10분 음성 대화. 화상영어보다 저렴하고, 아이가 부담 없이 영어를 시작합니다.",
+};
 
-interface FarewellData {
-  parentReport: string;
-}
-
-export default function Home() {
-  const [screen, setScreen] = useState<AppScreen>("welcome");
-  const [farewellData, setFarewellData] = useState<FarewellData | null>(null);
-
-  if (screen === "conversation") {
-    return (
-      <BomiRoom
-        onEnd={(report) => {
-          setFarewellData({ parentReport: report || "" });
-          setScreen("farewell");
-        }}
-      />
-    );
-  }
-
-  if (screen === "farewell") {
-    return (
-      <main
-        className="min-h-screen flex flex-col items-center justify-center gap-8 p-8 max-w-[480px] mx-auto"
-        style={{ animation: "fade-in 500ms ease-out" }}
-        role="main"
-        aria-label="대화 종료"
-      >
-        {/* 보미 작별 */}
-        <div style={{ animation: "bounce-soft 2s ease-in-out infinite" }}>
-          <Image src="/bomi-fox.png" alt="보미가 인사하고 있어요" width={160} height={160} priority />
-        </div>
-        <p className="text-2xl font-display font-bold text-center" style={{ color: "var(--bomi-orange)" }}>
-          See you tomorrow! Bye bye!
-        </p>
-
-        {/* 부모 리포트 카드 */}
-        {farewellData?.parentReport && (
-          <div
-            className="w-full rounded-2xl p-6 space-y-3"
-            style={{
-              background: "var(--bomi-surface)",
-              borderRadius: "var(--bomi-radius-md)",
-              animation: "fade-in 500ms ease-out 300ms both",
-            }}
-          >
-            <h2 className="text-xl font-bold" style={{ color: "var(--bomi-text)" }}>
-              학습 리포트
-            </h2>
-            <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: "var(--bomi-text-muted)" }}>
-              {farewellData.parentReport}
-            </p>
-          </div>
-        )}
-
-        <button
-          onClick={() => {
-            setFarewellData(null);
-            setScreen("welcome");
-          }}
-          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
-          style={{ background: "var(--bomi-orange)" }}
-          aria-label="처음으로 돌아가기"
-        >
-          처음으로
-        </button>
-      </main>
-    );
-  }
-
-  // Welcome screen
+export default function WelcomePage() {
   return (
     <main
-      className="min-h-screen flex flex-col items-center justify-center gap-8 p-8 max-w-[480px] mx-auto"
+      className="min-h-screen flex flex-col items-center px-6 py-12 max-w-[520px] mx-auto"
       role="main"
-      aria-label="보미 시작 화면"
+      aria-label="보미 소개"
     >
-      <div style={{ animation: "bounce-soft 2s ease-in-out infinite" }}>
-        <Image src="/bomi-fox.png" alt="아기 여우 보미" width={200} height={200} priority />
-      </div>
-
-      <div className="text-center space-y-2">
-        <h1
-          className="font-display font-bold"
-          style={{ color: "var(--bomi-orange)", fontSize: "2.25rem" }}
-        >
-          Hello, I&apos;m Bomi!
-        </h1>
-        <p className="text-xl" style={{ color: "var(--bomi-text-muted)" }}>
-          나랑 영어로 이야기하자!
-        </p>
-      </div>
-
-      <button
-        onClick={() => setScreen("conversation")}
-        className="px-12 py-5 rounded-full text-2xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
-        style={{ background: "var(--bomi-orange)" }}
-        aria-label="보미와 대화 시작하기"
+      {/* Hero — 한 줄 메시지 */}
+      <h1
+        className="font-display font-bold text-center leading-snug"
+        style={{ color: "var(--bomi-text)", fontSize: "1.75rem" }}
       >
-        Start talking
-      </button>
+        화상영어 1/10 가격.
+        <br />
+        <span style={{ color: "var(--bomi-orange)" }}>
+          매일 영어 친구, 보미.
+        </span>
+      </h1>
+
+      {/* 보미 캐릭터 */}
+      <div className="mt-8" style={{ animation: "bounce-soft 2s ease-in-out infinite" }}>
+        <Image
+          src="/bomi-fox.png"
+          alt="아기 여우 보미"
+          width={220}
+          height={220}
+          priority
+        />
+      </div>
+
+      {/* 어떻게 작동하는지 — 3줄 */}
+      <ul className="mt-10 w-full space-y-4">
+        {[
+          { icon: "🎙️", text: "AI와 진짜 음성 대화. 듣고, 말하고, 바로 피드백." },
+          { icon: "🦊", text: "귀여운 여우 친구 보미가 아이 눈높이에서 대화해요." },
+          { icon: "⏰", text: "하루 10분이면 충분. 부담 없이 매일 습관으로." },
+        ].map((item) => (
+          <li
+            key={item.icon}
+            className="flex items-start gap-4 rounded-2xl px-5 py-4"
+            style={{ background: "var(--bomi-surface)" }}
+          >
+            <span className="text-2xl shrink-0 mt-0.5" aria-hidden="true">
+              {item.icon}
+            </span>
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: "var(--bomi-text)" }}
+            >
+              {item.text}
+            </p>
+          </li>
+        ))}
+      </ul>
+
+      {/* 가격 한 줄 */}
+      <p
+        className="mt-10 text-center text-lg"
+        style={{ color: "var(--bomi-text-muted)" }}
+      >
+        지금 <strong style={{ color: "var(--bomi-orange)" }}>무료</strong>로
+        체험할 수 있어요.
+      </p>
+
+      {/* CTA 버튼 */}
+      <Link
+        href="/start"
+        className="mt-6 inline-flex items-center justify-center px-12 py-5 rounded-full text-xl font-display font-bold text-white transition-transform hover:scale-105 active:scale-95"
+        style={{ background: "var(--bomi-orange)" }}
+        aria-label="무료 체험 시작하기"
+      >
+        무료로 시작하기
+      </Link>
+
+      {/* 신뢰 한 줄 */}
+      <p
+        className="mt-6 text-sm text-center"
+        style={{ color: "var(--bomi-text-muted)" }}
+      >
+        카드 등록 없이 바로 시작 · 언제든 종료 가능
+      </p>
     </main>
   );
 }
