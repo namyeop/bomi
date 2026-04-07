@@ -25,10 +25,18 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
     wsUrl: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [micDenied, setMicDenied] = useState(false);
   const parentReportRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    fetch("/api/token")
+    // 마이크 권한 확인 후 토큰 요청
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        // 권한 확인 후 스트림 정리
+        stream.getTracks().forEach((t) => t.stop());
+        return fetch("/api/token");
+      })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -37,7 +45,13 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
         }
         setConnectionDetails({ token: data.token, wsUrl: data.wsUrl });
       })
-      .catch(() => setError("서버에 연결할 수 없어요"));
+      .catch((err) => {
+        if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")) {
+          setMicDenied(true);
+        } else {
+          setError("서버에 연결할 수 없어요");
+        }
+      });
   }, []);
 
   const handleDisconnected = useCallback(() => {
@@ -48,6 +62,69 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
     parentReportRef.current = parentReport;
   }, []);
 
+  // 마이크 거부 상태
+  if (micDenied) {
+    return (
+      <main
+        className="min-h-screen flex flex-col items-center justify-center gap-6 p-8 max-w-[480px] mx-auto"
+        style={{ animation: "fade-in 300ms ease-out" }}
+        role="alert"
+        aria-label="마이크 권한 필요"
+      >
+        <Image src="/bomi-fox.png" alt="보미가 기다리고 있어요" width={120} height={120} />
+        <p className="text-xl text-center font-display font-bold" style={{ color: "var(--bomi-text)" }}>
+          보미가 네 목소리를 들을 수 없어요
+        </p>
+        <p className="text-base text-center" style={{ color: "var(--bomi-text-muted)" }}>
+          마이크를 허용해야 보미와 대화할 수 있어요.
+        </p>
+        <button
+          onClick={() => {
+            setMicDenied(false);
+            navigator.mediaDevices
+              .getUserMedia({ audio: true })
+              .then((stream) => {
+                stream.getTracks().forEach((t) => t.stop());
+                return fetch("/api/token");
+              })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.error) {
+                  setError(data.error);
+                  return;
+                }
+                setConnectionDetails({ token: data.token, wsUrl: data.wsUrl });
+              })
+              .catch((err) => {
+                if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")) {
+                  setMicDenied(true);
+                } else {
+                  setError("서버에 연결할 수 없어요");
+                }
+              });
+          }}
+          className="px-10 py-4 rounded-full text-xl font-display font-bold text-white cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          style={{ background: "var(--bomi-orange)" }}
+          aria-label="마이크 다시 허용하기"
+        >
+          마이크 허용하기
+        </button>
+        <button
+          onClick={() => onEnd()}
+          className="px-10 py-4 rounded-full text-lg font-display font-bold cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          style={{
+            background: "var(--bomi-surface)",
+            color: "var(--bomi-text-muted)",
+            border: "2px solid var(--bomi-text-muted)",
+          }}
+          aria-label="돌아가기"
+        >
+          돌아가기
+        </button>
+      </main>
+    );
+  }
+
   // 에러 상태
   if (error) {
     return (
@@ -57,9 +134,7 @@ export function BomiRoom({ onEnd }: BomiRoomProps) {
         role="alert"
         aria-label="연결 오류"
       >
-        <div className="text-[80px] leading-none" role="img" aria-label="보미가 슬퍼하고 있어요">
-          🦊
-        </div>
+        <Image src="/bomi-fox.png" alt="보미가 슬퍼하고 있어요" width={120} height={120} />
         <p className="text-xl text-center" style={{ color: "var(--bomi-text-muted)" }}>
           {error}
         </p>

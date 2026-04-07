@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "보미 (Bomi) — 화상영어 1/10 가격, 매일 영어 친구",
+  title: "보미 (Bomi) — 영어가 무서운 아이도 편하게 말하는 AI 친구",
   description:
-    "AI 영어 친구 보미와 매일 10분 음성 대화. 화상영어보다 저렴하고, 아이가 부담 없이 영어를 시작합니다.",
+    "선생님 앞에서 얼어붙는 아이도, 귀여운 여우 친구 보미한테는 영어로 말해요. 매일 10분 음성 대화.",
 };
 
 export default function WelcomePage() {
@@ -19,10 +19,10 @@ export default function WelcomePage() {
         className="font-display font-bold text-center leading-snug"
         style={{ color: "var(--bomi-text)", fontSize: "1.75rem" }}
       >
-        화상영어 1/10 가격.
+        영어가 무서운 아이도,
         <br />
         <span style={{ color: "var(--bomi-orange)" }}>
-          매일 영어 친구, 보미.
+          보미한테는 말해요.
         </span>
       </h1>
 
@@ -41,8 +41,8 @@ export default function WelcomePage() {
       <ul className="mt-10 w-full space-y-4">
         {[
           { icon: "🎙️", text: "AI와 진짜 음성 대화. 듣고, 말하고, 바로 피드백." },
-          { icon: "🦊", text: "귀여운 여우 친구 보미가 아이 눈높이에서 대화해요." },
-          { icon: "⏰", text: "하루 10분이면 충분. 부담 없이 매일 습관으로." },
+          { icon: "🦊", text: "선생님이 아니라 친구. 긴장 없이 편하게 말해요." },
+          { icon: "⏰", text: "매일 10분, 아이가 영어로 말하는 모습을 보세요." },
         ].map((item) => (
           <li
             key={item.icon}

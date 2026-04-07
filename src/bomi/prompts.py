@@ -87,13 +87,19 @@ Questions remaining: {remaining}
 
 
 ASSESSMENT_PROMPT = """Analyze the conversation above between Bomi (AI fox) and a child.
-Provide a brief summary in Korean for the parent report:
+Write a parent report in Korean. This report should make the parent feel proud.
 
-1. 총 대화 턴 수: {turn_count}
-2. 아이가 사용한 영어 단어/표현 목록
-3. 교정이 이루어진 부분 (있다면)
-4. 오늘의 표현 "{daily_expression}" 사용 여부
-5. 전체 평가 (한 줄)
+Format EXACTLY like this (keep the labels):
 
-Format as a clean parent-friendly report in Korean.
-Do NOT use markdown formatting."""
+대화 시간: 약 {turn_count}턴
+아이가 한 영어 표현: (list 3-5 key English words/phrases the child actually said)
+대표 문장: "(quote the best English sentence the child said — their actual words)"
+오늘의 표현: "{daily_expression}" — (used/not used)
+보미의 한마디: (one warm encouraging sentence about the child's progress, in Korean)
+
+Rules:
+- Use the child's ACTUAL words from the conversation, not made-up examples.
+- The "대표 문장" must be a real quote from the child. If the child only said single words, quote the best word.
+- "보미의 한마디" should make parents feel their child is making progress.
+- Do NOT use markdown formatting. Plain text only.
+- Keep it short — 5-6 lines total."""
