@@ -47,7 +47,7 @@ export default function WelcomePage() {
           </div>
           <div className="pb-4 flex flex-col gap-3">
             <Link
-              href="/start"
+              href="/login?next=/start"
               className="inline-flex items-center justify-center px-8 py-4 rounded-full text-lg font-display font-bold text-white transition-transform hover:scale-105 active:scale-95"
               style={{ background: "var(--bomi-orange)" }}
             >
@@ -57,7 +57,7 @@ export default function WelcomePage() {
               className="text-xs text-center"
               style={{ color: "var(--bomi-text-muted)" }}
             >
-              가입 없이 바로 시작
+              이메일 링크로 바로 시작
             </p>
           </div>
         </div>
@@ -290,7 +290,7 @@ export default function WelcomePage() {
             직접 확인해보세요.
           </p>
           <Link
-            href="/start"
+            href="/login?next=/start"
             className="mt-6 inline-flex items-center justify-center px-10 py-5 rounded-full text-xl font-display font-bold text-white transition-transform hover:scale-105 active:scale-95"
             style={{ background: "var(--bomi-orange)" }}
           >
@@ -300,7 +300,7 @@ export default function WelcomePage() {
             className="mt-3 text-xs"
             style={{ color: "var(--bomi-text-muted)" }}
           >
-            가입 없이 바로 시작 · 언제든 종료 가능
+            이메일 링크로 바로 시작 · 언제든 종료 가능
           </p>
         </div>
       </section>
